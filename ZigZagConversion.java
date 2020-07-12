@@ -14,38 +14,36 @@ public class ZigZagConversion
         if (numRows == 0) return "";
         else if (numRows == 1) return s;
 
-        int numLetters = s.length();
-        int numLines = 2 * (numLetters / (numRows + 1)) + 1;
-        int curIndex = 0;
-
-        char[][] arr = new char[numRows][numLines];
-
-        for (int r = 0; r < numLines; r++) {
-            if (r % 2 == 0 || numRows == 2) { //even row
-                for (int c = 0; c < numRows; c++) {
-                    if (curIndex >= numLetters) break;
-                    arr[c][r] = s.charAt(curIndex);
-                    curIndex++;
-                }
-            }
-            else { //odd row
-                for (int c = numRows - 2; c >= 1; c--) {
-                    if (curIndex >= numLetters) break;
-                    arr[c][r] = s.charAt(curIndex);
-                    curIndex++;
-                }
-            }
-            if (curIndex >= numLetters) break;
-        }
-
         String result = "";
 
-        for (int c = 0; c < numRows; c++) {
-            for (int r = 0; r < numLines; r++) {
-                char toAdd = arr[c][r];
+        int numLetters = s.length();
 
-                if (toAdd != '\u0000') result += toAdd;
+        //first row:
+        int i = 0;
+        while (i < numLetters) {
+            result += s.charAt(i);
+            i += (numRows - 1) * 2;
+        }
+
+        //middle rows:
+        for (int curRow = 1; curRow < numRows - 1; curRow++) {
+            i = curRow;
+            while (i < numLetters) {
+                result += s.charAt(i);
+                int j = i + (numRows * 2) - 2 - (curRow * 2);
+
+                if (j < numLetters) {
+                    result += s.charAt(j);
+                }
+                i += (numRows * 2) - 2;
             }
+        }
+
+        //last row:
+        i = numRows - 1;
+        while (i < numLetters) {
+            result += s.charAt(i);
+            i += (numRows - 1) * 2;
         }
 
         return result;
